@@ -1,0 +1,387 @@
+{
+  "metadata": {
+    "lastUpdated": "2025-01-28",
+    "totalFeatures": 35,
+    "completedFeatures": 0,
+    "sources": ["sprint_plan", "productboard_insights", "customer_interviews"],
+    "interviews_analyzed": ["VW - Andre Tawalbeh Haeusler", "NTT Interview", "Marianne Garrido Minutti"]
+  },
+  "features": [
+    {
+      "id": "csv-import",
+      "title": "CSV File Import",
+      "description": "Upload and parse CSV files with drag-and-drop support",
+      "priority": "high",
+      "completed": false,
+      "step": 1,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "column-mapping",
+      "title": "Column Mapping UI",
+      "description": "Map CSV columns to inventory fields with AI suggestions",
+      "priority": "high",
+      "completed": false,
+      "step": 2,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "wizard-stepper",
+      "title": "Multi-step Wizard Component",
+      "description": "Reusable wizard stepper with navigation and validation",
+      "priority": "high",
+      "completed": false,
+      "step": 1,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "image-upload",
+      "title": "Diagram Image Upload",
+      "description": "Support for PNG/JPG diagram uploads",
+      "priority": "medium",
+      "completed": false,
+      "step": 3,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "object-detection",
+      "title": "AI Object Detection",
+      "description": "Detect objects in architecture diagrams using vision API",
+      "priority": "high",
+      "completed": false,
+      "step": 3,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "object-classification",
+      "title": "Object Classification",
+      "description": "Classify detected objects into fact sheet types (Application, Server, etc.)",
+      "priority": "high",
+      "completed": false,
+      "step": 4,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "relationship-detection",
+      "title": "Relationship Detection (Diagrams)",
+      "description": "Detect and classify arrows/connections in diagrams",
+      "priority": "medium",
+      "completed": false,
+      "step": 5,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "multi-type-support",
+      "title": "All Fact Sheet Type Support",
+      "description": "Support import for all fact sheet types (not just Applications)",
+      "priority": "high",
+      "completed": false,
+      "step": 6,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "validation-engine",
+      "title": "Data Validation Engine",
+      "description": "Duplicate detection, required fields, data type validation",
+      "priority": "high",
+      "completed": false,
+      "step": 8,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "error-recovery",
+      "title": "Import Error Recovery",
+      "description": "Resume failed imports and handle large files",
+      "priority": "medium",
+      "completed": false,
+      "step": 9,
+      "source": "sprint_plan"
+    },
+    {
+      "id": "FR-ib-001",
+      "title": "Train on Common Diagram Formats",
+      "description": "Train AI models on Archimate, Ardoq, Visio, Drawio, PPT formats for better extraction accuracy",
+      "priority": "high",
+      "completed": false,
+      "step": 3,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/51161851",
+      "customer_pain": "New customers with legacy diagrams get poor extraction results"
+    },
+    {
+      "id": "FR-ib-002",
+      "title": "Format Detection & Quality Score",
+      "description": "Auto-detect input format, show confidence score and quick-fix suggestions before import",
+      "priority": "medium",
+      "completed": false,
+      "step": 3,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/51161851",
+      "customer_pain": "Users don't understand expected accuracy of imports"
+    },
+    {
+      "id": "FR-ib-003",
+      "title": "Image-to-Diagram Conversion",
+      "description": "Convert PNG/JPG to editable shapes with dictionary mapping and new fact sheet creation",
+      "priority": "high",
+      "completed": false,
+      "step": 3,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52476047",
+      "customer_pain": "Can't convert PPT slides to linked inventory diagrams easily"
+    },
+    {
+      "id": "FR-ib-004",
+      "title": "Interactive Confirm-and-Link Wizard",
+      "description": "Step-by-step wizard for conversion, matching, and linking imported items to inventory",
+      "priority": "medium",
+      "completed": false,
+      "step": 2,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52476047",
+      "customer_pain": "Inventory builder not intuitive, failed imports due to ambiguous mapping"
+    },
+    {
+      "id": "FR-ib-005",
+      "title": "Prompt Templates & Best Practices",
+      "description": "In-app prompt gallery with examples and help panel for crafting correct prompts",
+      "priority": "high",
+      "completed": false,
+      "step": 1,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/51736492",
+      "customer_pain": "Users confused about how to structure prompts, inconsistent results"
+    },
+    {
+      "id": "FR-ib-006",
+      "title": "Preview Mode & Dry-Run Sharing",
+      "description": "Preview interpreted elements before import, share read-only dry-run link with support",
+      "priority": "medium",
+      "completed": false,
+      "step": 2,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/51736492",
+      "customer_pain": "Can't easily share problematic imports with support for triage"
+    },
+    {
+      "id": "FR-ib-007",
+      "title": "Export/Enrich/Re-Import Workflow",
+      "description": "Export template with stable schema, guided mapping UI, validation, and merge options (create/update/skip)",
+      "priority": "high",
+      "completed": false,
+      "step": 2,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52674605",
+      "customer_pain": "Users export to Excel, enrich with Copilot, then struggle with re-import"
+    },
+    {
+      "id": "FR-ib-008",
+      "title": "Condensed Default Views for AI Fields",
+      "description": "Default compact attribute set with admin toggles to show/hide additional AI fields",
+      "priority": "low",
+      "completed": false,
+      "step": 6,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52674605",
+      "customer_pain": "Too many AI attributes displayed by default, overwhelming for users"
+    },
+    {
+      "id": "FR-ex-009",
+      "title": "Join Attributes from Related Fact Sheets",
+      "description": "Add columns from related fact sheets in table view (native join functionality)",
+      "priority": "high",
+      "completed": false,
+      "step": 6,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52517273",
+      "customer_pain": "Must export to Excel to join data from multiple fact sheet types"
+    },
+    {
+      "id": "FR-ex-010",
+      "title": "Multi-Fact Sheet Export Views",
+      "description": "Native capability to export joined views (CSV/Excel/JSON) without manual Excel work",
+      "priority": "medium",
+      "completed": false,
+      "step": 6,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/53002464",
+      "customer_pain": "Excel is the only option for multi-table reporting"
+    },
+    {
+      "id": "FR-ex-011",
+      "title": "Saved Views & Scheduled Exports",
+      "description": "Save table configurations as named views, schedule recurring exports to email/S3/webhook",
+      "priority": "medium",
+      "completed": false,
+      "step": 11,
+      "source": "productboard",
+      "productboard_note": "https://leanix.productboard.com/all-notes/notes/52182373",
+      "customer_pain": "Need to manually recreate table setup and extract data repeatedly"
+    },
+    {
+      "id": "INT-001",
+      "title": "Staging Area for Import Governance",
+      "description": "Two-stage import: upload to staging inbox where central team reviews and approves before final import to production",
+      "priority": "high",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Large orgs (7k+ users) need data quality control. Without approval workflow, mass uploads create duplicates and erratic AI data"
+    },
+    {
+      "id": "INT-002",
+      "title": "System User Context for Imports",
+      "description": "Run imports as system user (e.g., 'LeanIX Support') instead of personal account to avoid attribution confusion",
+      "priority": "high",
+      "completed": false,
+      "step": 1,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "All imported fact sheets attributed to admin personally, causing confusion about who created what"
+    },
+    {
+      "id": "INT-003",
+      "title": "Granular Field-Level Update Control",
+      "description": "Specify which fields to update vs. preserve during import, show diff between existing and new values with confirmation",
+      "priority": "high",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Want to update specific attributes (lifecycle) while preserving existing data (descriptions, relations). No granularity"
+    },
+    {
+      "id": "INT-004",
+      "title": "Data Type & Validation Visibility",
+      "description": "Display field types (string, picklist, number), character limits, validation rules, and conflicts before import",
+      "priority": "high",
+      "completed": false,
+      "step": 2,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Don't know if mappings will fail due to data type mismatches, missing picklist values, or character limits until after import"
+    },
+    {
+      "id": "INT-005",
+      "title": "Save & Reuse Mapping Templates",
+      "description": "Save mappings as reusable templates, share across org, auto-suggest based on file structure, with search",
+      "priority": "high",
+      "completed": false,
+      "step": 2,
+      "source": "customer_interview",
+      "interview": "VW, Marianne",
+      "customer_pain": "Recurring imports require recreating mappings each time. Need to standardize imports across teams"
+    },
+    {
+      "id": "INT-006",
+      "title": "Visual Import Action Differentiation",
+      "description": "Color-code import impact: new items (green), updates (blue), unchanged (gray), empty (yellow), errors (red)",
+      "priority": "high",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Can't easily see what will be created vs. updated, hard to verify changes before import"
+    },
+    {
+      "id": "INT-007",
+      "title": "Recently Imported Items Filter",
+      "description": "After import, auto-filter to show only just-imported items with creation date sorting",
+      "priority": "high",
+      "completed": false,
+      "step": 10,
+      "source": "customer_interview",
+      "interview": "VW, NTT",
+      "customer_pain": "Can't easily find what was just added to verify results. Must manually filter by creation date"
+    },
+    {
+      "id": "INT-008",
+      "title": "Automatic Import Source Tagging",
+      "description": "Auto-tag imported items with source (file name, import date, channel) for tracking and filtering",
+      "priority": "high",
+      "completed": false,
+      "step": 9,
+      "source": "customer_interview",
+      "interview": "NTT",
+      "customer_pain": "Can't identify which items came from which import, especially for bulk operations"
+    },
+    {
+      "id": "INT-009",
+      "title": "Inline Editing in Review",
+      "description": "Edit detected values directly in review screen with pencil icons, without returning to source files",
+      "priority": "medium",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "VW, Marianne",
+      "customer_pain": "Making corrections requires going back to Excel and re-uploading, slow for small changes"
+    },
+    {
+      "id": "INT-010",
+      "title": "Relationship Diagram in Review",
+      "description": "Show interactive relationship diagram during review to visualize connections",
+      "priority": "medium",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Hard to understand relationships in list format, especially for complex imports"
+    },
+    {
+      "id": "INT-011",
+      "title": "Soft Delete with Undo",
+      "description": "Gray out removed detection objects instead of deleting, allow restoration if clicked accidentally",
+      "priority": "medium",
+      "completed": false,
+      "step": 4,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Accidental deletion loses work, no undo functionality"
+    },
+    {
+      "id": "INT-012",
+      "title": "Re-prompt AI Analysis",
+      "description": "Provide additional context/prompts to refine AI detection without full re-upload",
+      "priority": "medium",
+      "completed": false,
+      "step": 4,
+      "source": "customer_interview",
+      "interview": "VW",
+      "customer_pain": "Initial AI detection incomplete or incorrect, need ability to adjust without starting over"
+    },
+    {
+      "id": "INT-013",
+      "title": "Subtype Selection in Review",
+      "description": "Assign fact sheet subtypes during review using drag-and-drop or dropdown",
+      "priority": "medium",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "Marianne",
+      "customer_pain": "Must manually add subtypes after import in inventory, time-consuming for bulk imports"
+    },
+    {
+      "id": "INT-014",
+      "title": "Bulk Import All Button",
+      "description": "Add 'Import All' button at top and bottom of review for quick selection of all items",
+      "priority": "medium",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "Marianne",
+      "customer_pain": "For large imports (100-500 items), scrolling to select all is tedious"
+    },
+    {
+      "id": "INT-015",
+      "title": "Error-Only Filter View",
+      "description": "Filter review screen to show only items with validation errors or missing required fields",
+      "priority": "medium",
+      "completed": false,
+      "step": 8,
+      "source": "customer_interview",
+      "interview": "Marianne",
+      "customer_pain": "With 500+ rows, scrolling through all items to find errors is inefficient"
+    }
+  ]
+}

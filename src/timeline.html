@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<!--
+    INVENTORY BUILDER REBUILD - TIMELINE
+
+    QUICK EDIT GUIDE:
+    =================
+    1. Slides Data: Search for "const slides = [" (around line 480)
+    2. Each step starts with: title: "Step N (...): Title"
+    3. To update Productboard links: Search for "📋 Productboard" and update the href
+    4. Navigation structure: Search for "const navigation = [" (around line 1750)
+
+    PRODUCTBOARD LINKS:
+    - Weeks 1-3: Already linked
+    - Weeks 4-11: Add URLs when features are created
+    - Format: <a href="PRODUCTBOARD_URL" target="_blank">
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Builder Rebuild - Sprint Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-dark: #1d4ed8;
+            --primary-blue-hover: #1e40af;
+            --nav-bg: #ffffff;
+            --nav-border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --bg-white: #ffffff;
+            --bg-gray: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+        }
+
+        /* Top Header Bar */
+        #top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 1001;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        #top-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        #top-header .logo-sap {
+            background: #008fd3;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #top-header nav {
+            display: flex;
+            gap: 32px;
+            margin-left: 48px;
+        }
+
+        #top-header nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        #top-header nav a:hover,
+        #top-header nav a.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        /* Side Navigation */
+        #side-nav {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 280px;
+            height: calc(100vh - 60px);
+            background: var(--nav-bg);
+            color: var(--text-primary);
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            border-right: 1px solid var(--border-color);
+        }
+        #side-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #1e293b;
+            color: white;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        #side-nav.hidden {
+            transform: translateX(-280px);
+        }
+
+        #side-nav-header {
+            padding: 16px 20px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #side-nav-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-section-header {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-white);
+            transition: background 0.2s;
+        }
+
+        .nav-section-header:hover {
+            background: var(--bg-gray);
+        }
+
+        .nav-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .nav-section-title.clickable {
+            cursor: pointer;
+        }
+
+        .nav-section-title.clickable:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-section-icon {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s;
+            stroke: var(--text-secondary);
+        }
+
+        .nav-section.expanded .nav-section-icon {
+            transform: rotate(90deg);
+        }
+
+        .nav-items {
+            display: none;
+            background: var(--bg-gray);
+        }
+
+        .nav-section.expanded .nav-items {
+            display: block;
+        }
+
+        .nav-item {
+            padding: 10px 20px 10px 40px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            color: var(--text-secondary);
+        }
+
+        .nav-item:hover {
+            background: #e0f2fe;
+            color: var(--primary-blue);
+        }
+
+        .nav-item.active {
+            background: #dbeafe;
+            border-left-color: var(--primary-blue);
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        #nav-toggle {
+            position: fixed;
+            left: 280px;
+            top: 76px;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 0 6px 6px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+        }
+
+        #nav-toggle:hover {
+            background: var(--bg-gray);
+            color: var(--primary-blue);
+        }
+
+        #nav-toggle.nav-hidden {
+            left: 0;
+        }
+
+        #app {
+            transition: margin-left 0.3s ease;
+            margin-left: 280px;
+            margin-top: 60px;
+        }
+
+        #app.nav-hidden {
+            margin-left: 0;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb {
+            padding: 16px 24px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: var(--text-secondary);
+            margin: 0 8px;
+        }
+
+        /* Content Styles */
+        .slide-container {
+            background: var(--bg-white);
+            margin: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        #slide-header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 32px;
+        }
+
+        #slide-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        #slide-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 8px 0 0 0;
+        }
+
+        #slide-content {
+            padding: 32px;
+        }
+
+        /* Progress Stepper */
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .stepper-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-gray);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .stepper-circle.active {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+
+        .stepper-circle.completed {
+            background: var(--bg-white);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .stepper-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .stepper-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Buttons */
+        button {
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-blue-hover);
+        }
+
+        .btn-primary:disabled {
+            background: var(--bg-gray);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-gray);
+        }
+
+        /* Footer */
+        .slide-footer {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .slide-counter {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <header id="top-header">
+        <div class="logo">
+            <span class="logo-sap">SAP</span>
+            <span>LeanIX</span>
+        </div>
+        <nav id="top-nav">
+            <a href="#" class="nav-link active" data-view="timeline" onclick="switchView('timeline')">Sprint Planning</a>
+            <a href="#" class="nav-link" data-view="checklist" onclick="switchView('checklist')">Feature Checklist</a>
+        </nav>
+    </header>
+
+    <!-- Side Navigation -->
+    <nav id="side-nav">
+        <div id="side-nav-header">
+            <h3>Navigation</h3>
+        </div>
+        <div id="side-nav-content">
+            <!-- Navigation will be populated by JavaScript -->
+        </div>
+    </nav>
+
+    <!-- Toggle Button -->
+    <button id="nav-toggle" aria-label="Toggle navigation">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <div id="app" class="w-full h-screen flex flex-col">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="#">Sprint Planning</a>
+            <span>/</span>
+            <span id="breadcrumb-current">Inventory Builder Rebuild</span>
+        </div>
+
+        <!-- Slide Content -->
+        <div class="slide-container flex-1 flex flex-col" style="height: calc(100vh - 180px);">
+            <!-- Header -->
+            <div id="slide-header">
+                <h1 id="slide-title"></h1>
+                <p id="slide-subtitle"></p>
+            </div>
+
+            <!-- Content -->
+            <div id="slide-content" class="flex-1 overflow-y-auto"></div>
+
+            <!-- Footer with navigation -->
+            <div class="slide-footer">
+                <button id="prev-btn" class="btn-secondary flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Previous
+                </button>
+
+                <span id="slide-counter" class="slide-counter"></span>
+
+                <button id="next-btn" class="btn-primary flex items-center gap-2">
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Feature Checklist View -->
+        <div id="checklist-view" class="slide-container flex-1 flex-col" style="height: calc(100vh - 180px); display: none;">
+            <div id="slide-header">
+                <h1>Feature Checklist</h1>
+                <p>Track completion status of required features</p>
+            </div>
+
+            <div class="flex-1 overflow-y-auto" style="padding: 32px;">
+                <!-- Stats Cards -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px;">
+                    <div class="bg-white p-6 rounded-lg border border-gray-200">
+                        <div class="text-sm text-gray-600 mb-1">Total Features</div>
+                        <div id="stat-total" class="text-3xl font-bold text-gray-900">0</div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                        <div class="text-sm text-green-800 mb-1">Completed</div>
+                        <div id="stat-completed" class="text-3xl font-bold text-green-600">0</div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                        <div class="text-sm text-blue-800 mb-1">Progress</div>
+                        <div id="stat-progress" class="text-3xl font-bold text-blue-600">0%</div>
+                    </div>
+                </div>
+
+                <!-- Checklist -->
+                <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Required Features</h2>
+                    </div>
+                    <div id="checklist-items" class="divide-y divide-gray-200">
+                        <!-- Items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // SLIDES DATA - Edit here to update content
+        // ============================================================
+        // Each slide represents one section of the timeline
+        // To add Productboard links, find the step and add the URL
+        // ============================================================
+        
+        const slides = [
+            {
+                title: "Inventory Builder Rebuild",
+                subtitle: "Sprint Plan Q1 2025",
+                content: `
+                    <div class="flex flex-col items-center justify-center h-full text-center">
+                        <h1 class="text-6xl font-bold text-blue-600 mb-4">Inventory Builder Rebuild</h1>
+                        <h2 class="text-3xl text-gray-700 mb-8">11-Step Sprint Plan</h2>
+                        <p class="text-xl text-gray-600 mb-4">January 15 - April 2, 2025</p>
+                        <div class="mt-8 bg-green-50 p-6 rounded-lg max-w-2xl">
+                            <p class="text-2xl font-bold text-green-800">Goal: 5 Customers Using by March 31</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Initiative Overview",
+                subtitle: "",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-blue-800">Objectives</h3>
+                            <ul class="space-y-3 text-lg">
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3">•</span>
+                                    <span>Rebuild inventory builder with completely new UI</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3">•</span>
+                                    <span>Achieve feature parity by March 16, 2025</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3">•</span>
+                                    <span><strong>5 customers using by March 31, 2025</strong></span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-green-800">Approach</h3>
+                            <p class="text-lg mb-3">Hybrid methodology: Build minimal viable journey first (Weeks 1-3), then complete core functionality with depth (Weeks 4-9). Customer rollout starts Step 10 (March 19) with concurrent development.</p>
+                            <div class="mt-4 bg-blue-50 p-4 rounded">
+                                <p class="text-base"><strong>Key principle:</strong> Break work into small, parallel-trackable epics. Some may take 1-1.5 weeks, allowing flexible team allocation.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-orange-800">Timeline</h3>
+                            <p class="text-lg"><strong>Start:</strong> January 15, 2025 | <strong>Customer Rollout:</strong> March 19, 2025 | <strong>Deadline:</strong> March 31, 2025</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Phase 1: Foundation",
+                subtitle: "Weeks 1-3 | Minimal Viable Journey",
+                content: `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="text-center mb-8">
+                            <h1 class="text-5xl font-bold text-blue-600 mb-4">Phase 1: Foundation</h1>
+                            <h2 class="text-3xl text-gray-700 mb-6">Weeks 1-3</h2>
+                            <p class="text-xl text-gray-600">Minimal Viable Journey</p>
+                        </div>
+                        <div class="bg-purple-50 p-8 rounded-lg max-w-3xl">
+                            <p class="text-2xl font-semibold text-purple-800 mb-4">Goal</p>
+                            <p class="text-xl text-gray-700">Working CSV import + Diagram recognition foundation</p>
+                        </div>
+                        <div class="mt-8 grid grid-cols-3 gap-6 max-w-4xl">
+                            <div class="bg-blue-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-blue-800 mb-2">Step 1</p>
+                                <p class="text-sm text-gray-700">Basic CSV Import</p>
+                            </div>
+                            <div class="bg-blue-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-blue-800 mb-2">Step 2</p>
+                                <p class="text-sm text-gray-700">Mapping & Import</p>
+                            </div>
+                            <div class="bg-blue-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-blue-800 mb-2">Step 3</p>
+                                <p class="text-sm text-gray-700">Image Detection</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 1 ====================
+            {
+                title: "Step 1: Basic CSV Import",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Users need a simple way to import inventory data from CSV files. Current system lacks a modern, guided import experience. This epic delivers the foundation wizard framework that will be reused for all import types.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• 2-step wizard stepper component (based on Figma designs)</li>
+                                <li>• Navigation between steps</li>
+                                <li>• File upload UI (drag-drop, validation)</li>
+                                <li>• CSV validation</li>
+                                <li>• Meaningful error messages</li>
+                                <li>• CSV extracted results shown in "Review and Import" step</li>
+                                <li>• Does not need to be a compliant table for the moment</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700">→ Users can upload CSV files, see validation errors, and navigate through wizard steps</p>
+                        </div>
+
+                        <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h3 class="text-lg font-bold text-teal-800 mb-2">🎬 Sprint Review Script</h3>
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Demo Flow:</p>
+                                    <ol class="ml-4 mt-1 space-y-1">
+                                        <li>1. Show the new import wizard entry point</li>
+                                        <li>2. Demonstrate drag-and-drop file upload (use a sample CSV)</li>
+                                        <li>3. Show file validation (try uploading invalid file to show error messages)</li>
+                                        <li>4. Navigate through the 2-step wizard (highlight the stepper component)</li>
+                                        <li>5. Show CSV preview in the "Review" step with extracted data</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Key Talking Points:</p>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li>• This wizard framework will be reused for all import types (CSV, images, Excel)</li>
+                                        <li>• Modern UI follows LeanIX design system</li>
+                                        <li>• Clear validation prevents bad data early</li>
+                                        <li>• Foundation complete for Step 2 mapping functionality</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No actual import execution (Step 2)</li>
+                                <li>• No column mapping (Step 2)</li>
+                                <li>• No support for Excel files (Step 12+)</li>
+                                <li>• No advanced CSV formats (multi-line cells, complex delimiters)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-700 font-semibold mb-2">Key UI Components (from Figma):</p>
+                            <ul class="space-y-2 text-sm text-gray-700 ml-4">
+                                <li>• <strong>File upload modal:</strong> Drag-drop zone with file type indicators (.csv, .png, .jpg)</li>
+                                <li>• <strong>Stepper component:</strong> 3-step wizard (File analysis → Map Content → Review & Import)</li>
+                                <li>• <strong>Validation messaging:</strong> Clear error display with file size limits</li>
+                                <li>• <strong>Loading state:</strong> "Analyzing" screen with progress indicator</li>
+                            </ul>
+                            <p class="text-sm text-gray-600 mt-3">• [Figma designs link needed]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+                
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">📋 Productboard</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://leanix.productboard.com/all-notes/notes/52999760" target="_blank" class="text-blue-600 hover:underline font-semibold">
+                                    View Epic in Productboard →
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+    </div>
+                `
+            },
+            // ==================== Step 2 ====================
+            {
+                title: "Step 2: Mapping & Import",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Users need to map CSV columns to inventory fields and execute imports. This completes the end-to-end CSV import journey, enabling the first demo to stakeholders.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Fixed mapping (Applications only)</li>
+                                <li>• Column-to-field assignment with AI suggestions</li>
+                                <li>• Review screen & Import execution</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold">🎯 End-to-end CSV → Applications working</p>
+                        </div>
+
+                        <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h3 class="text-lg font-bold text-teal-800 mb-2">🎬 Sprint Review Script</h3>
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Demo Flow:</p>
+                                    <ol class="ml-4 mt-1 space-y-1">
+                                        <li>1. Start with a sample CSV containing 10-15 Application records</li>
+                                        <li>2. Show the complete wizard flow from upload to mapping</li>
+                                        <li>3. Highlight AI-powered column suggestions ("Application Name" → "Name")</li>
+                                        <li>4. Show manual override (change a suggestion to demonstrate flexibility)</li>
+                                        <li>5. Execute import and show success notification</li>
+                                        <li>6. Navigate to inventory and show the newly imported Applications</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Key Talking Points:</p>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li>• <strong>First milestone:</strong> Complete end-to-end working flow ready for stakeholder demo</li>
+                                        <li>• AI reduces manual mapping effort by 70%+ (show time savings)</li>
+                                        <li>• Foundation established for adding more fact sheet types (Step 6)</li>
+                                        <li>• Ready to start customer feedback collection</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Expected Questions & Answers:</p>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li>• Q: "Can we import other types?" → A: "Step 6, focusing on Applications first"</li>
+                                        <li>• Q: "What about relationships?" → A: "Step 7 for CSV, Step 5 for diagrams"</li>
+                                        <li>• Q: "How accurate is AI mapping?" → A: "Show live accuracy metrics"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• Only Applications fact sheet type (other types in Step 6)</li>
+                                <li>• No relationship mapping (CSV relationships in Step 7)</li>
+                                <li>• No duplicate detection or update mode (Step 8 validation)</li>
+                                <li>• No advanced validation rules (Step 8)</li>
+                                <li>• No import history/audit log (Step 9+)</li>
+                                <li>• No template/configuration saving (Step 11)</li>
+                                <li>• No bulk remap across multiple files</li>
+                                <li>• No Excel file support (Step 12+ post-Q1)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• Step 1 wizard framework complete</li>
+                                <li>• AI service for mapping suggestions (evaluation by Jan 17)</li>
+                                <li>• Backend import API endpoints ready</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups (attachment or URL)</h3>
+                            <p class="text-sm text-gray-700 font-semibold mb-2">Key UI Components (from Figma):</p>
+                            <ul class="space-y-2 text-sm text-gray-700 ml-4">
+                                <li>• <strong>Mapping interface:</strong> Two-column layout (Source column → Fact sheet attribute)</li>
+                                <li>• <strong>Column suggestions:</strong> AI-powered field mapping with dropdown selectors</li>
+                                <li>• <strong>Mapping progress:</strong> "8 of 11 columns mapped" counter</li>
+                                <li>• <strong>Review table:</strong> Grid showing all detected items with status badges</li>
+                                <li>• <strong>Action buttons:</strong> "Save mapping", "Continue", "Add to inventory"</li>
+                                <li>• <strong>Import overview:</strong> Statistics dashboard (Ready for Review, Added to Inventory, Total Discoveries)</li>
+                            </ul>
+                            <p class="text-sm text-gray-600 mt-3">Relevant URLs (Confluence etc.)</p>
+                        </div>
+                
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">📋 Productboard</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://leanix.productboard.com/all-notes/notes/53008356" target="_blank" class="text-blue-600 hover:underline font-semibold">
+                                    View Epic in Productboard →
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+    </div>
+                `
+            },
+            // ==================== Step 3 ====================
+            {
+                title: "Step 3: Image Detection",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Users want to import inventory from architecture diagrams. This epic establishes the foundation for diagram-based imports by extracting objects from images using AI/vision services.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Image file support (.png, .jpg)</li>
+                                <li>• AI/Vision service integration for object extraction</li>
+                                <li>• Extract objects with labels, colors, positions</li>
+                                <li>• Display detected objects in list view</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold">🎯 Diagram upload with object extraction working</p>
+                        </div>
+
+                        <div class="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+                            <h3 class="text-lg font-bold text-teal-800 mb-2">🎬 Sprint Review Script</h3>
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Demo Flow:</p>
+                                    <ol class="ml-4 mt-1 space-y-1">
+                                        <li>1. Upload the TechSolutions architecture diagram (.png)</li>
+                                        <li>2. Show the "Analyzing..." loading state with progress indicator</li>
+                                        <li>3. Display the diagram preview with detected object highlights</li>
+                                        <li>4. Show the list of extracted objects with their metadata (labels, colors, positions)</li>
+                                        <li>5. Zoom in on specific detected boxes to show accuracy</li>
+                                        <li>6. Try a second diagram to show consistency</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Key Talking Points:</p>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li>• <strong>Key differentiator:</strong> Import from visual diagrams, not just structured data</li>
+                                        <li>• Vision AI extracts 85%+ of objects accurately</li>
+                                        <li>• Foundation for Step 4 (classification) and Step 5 (relationships)</li>
+                                        <li>• Works with common architecture diagram formats (.png, .jpg)</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Expected Questions & Answers:</p>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li>• Q: "What about Visio files?" → A: "Post-Q1, focusing on images first"</li>
+                                        <li>• Q: "Can we edit detected objects?" → A: "Step 4 adds manual editing"</li>
+                                        <li>• Q: "What about connections?" → A: "Step 5 detects relationships"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No object classification/type assignment (Step 4)</li>
+                                <li>• No relationship/connection detection (Step 5)</li>
+                                <li>• No manual editing of detected objects (Step 4)</li>
+                                <li>• No batch processing of multiple diagrams</li>
+                                <li>• No support for PDF/Visio files (post-Q1)</li>
+                                <li>• No support for complex diagram formats (multi-page, embedded images)</li>
+                                <li>• No re-training or learning from corrections (future enhancement)</li>
+                                <li>• No diagram validation or quality scoring</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• AI/Vision service provider selected by Jan 17</li>
+                                <li>• Service API keys and access provisioned</li>
+                                <li>• Step 1 wizard framework (reuse for image upload)</li>
+                                <li>• Backend storage for images and metadata</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups (attachment or URL)</h3>
+                            <p class="text-sm text-gray-700 font-semibold mb-2">Key UI Components (from Figma):</p>
+                            <ul class="space-y-2 text-sm text-gray-700 ml-4">
+                                <li>• <strong>Image preview:</strong> Large diagram display showing "TechSolutions - As-is architecture"</li>
+                                <li>• <strong>Object detection visualization:</strong> Colored boxes/highlights on detected objects</li>
+                                <li>• <strong>Detected objects list:</strong> Simple table/list view with object metadata (labels, colors, positions)</li>
+                                <li>• <strong>File type indicator:</strong> Badge showing "Text document" or "Image" type</li>
+                                <li>• <strong>Analysis progress:</strong> Loading state with "Analyzing..." message</li>
+                            </ul>
+                            <p class="text-sm text-gray-600 mt-3">Relevant URLs (Confluence etc.)</p>
+                        </div>
+                
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">📋 Productboard</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://leanix.productboard.com/all-notes/notes/53013420" target="_blank" class="text-blue-600 hover:underline font-semibold">
+                                    View Epic in Productboard →
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+    </div>
+                `
+            },
+            {
+                title: "Phase 2: Diagram Recognition",
+                subtitle: "Weeks 4-5 | Complete Diagram Workflow",
+                content: `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="text-center mb-8">
+                            <h1 class="text-5xl font-bold text-green-600 mb-4">Phase 2: Diagram Recognition</h1>
+                            <h2 class="text-3xl text-gray-700 mb-6">Weeks 4-5</h2>
+                            <p class="text-xl text-gray-600">Complete Diagram Workflow</p>
+                        </div>
+                        <div class="bg-purple-50 p-8 rounded-lg max-w-3xl">
+                            <p class="text-2xl font-semibold text-purple-800 mb-4">Goal</p>
+                            <p class="text-xl text-gray-700">Full diagram-to-inventory workflow (AI for mapping suggestions, not re-extraction)</p>
+                        </div>
+                        <div class="mt-8 grid grid-cols-2 gap-6 max-w-3xl">
+                            <div class="bg-green-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-green-800 mb-2">Step 4</p>
+                                <p class="text-sm text-gray-700">Object Classification</p>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-green-800 mb-2">Step 5</p>
+                                <p class="text-sm text-gray-700">Relationships (Diagram)</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 4 ====================
+            {
+                title: "Step 4: Object Classification",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Detected objects need to be classified into fact sheet types (Application, Server, etc.) to be imported. AI suggestions reduce manual effort. Manual editing provides control and accuracy. This bridges diagram extraction to actual inventory data.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• AI classification of objects to fact sheet types (based on labels/colors/context)</li>
+                                <li>• Enhanced list/table view with suggested types and confidence scores</li>
+                                <li>• Manual type correction via dropdown (all available fact sheet types)</li>
+                                <li>• Add new objects manually (not detected by AI)</li>
+                                <li>• Delete incorrect/unwanted objects</li>
+                                <li>• Bulk classification: "Apply to all similar" based on pattern matching</li>
+                                <li>• Visual feedback on classification status (classified vs. pending)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700">→ All detected objects can be classified and edited, ready for relationship mapping</p>
+                            <p class="text-gray-700 mt-2">AI classification achieves >70% accuracy on test diagrams</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No relationship detection (Step 5)</li>
+                                <li>• No field-level mapping (reuses Step 2 mapping step)</li>
+                                <li>• No learning from user corrections (future enhancement)</li>
+                                <li>• Limited to fact sheet types only (no sub-types)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Step 3 object detection complete</p>
+                            <p class="text-sm text-gray-700">• AI/ML model for classification (may be same service as Step 3)</p>
+                            <p class="text-sm text-gray-700">• Fact sheet type metadata API</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Classification UI mockups]</p>
+                            <p class="text-sm text-gray-600">• [Fact sheet types reference]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 5 ====================
+            {
+                title: "Step 5: Relationships (Diagram)",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Architecture diagrams contain connections/arrows showing relationships. Detecting and classifying these completes the diagram import workflow. This is a key differentiator - importing both entities AND relationships from visual diagrams.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Detect connections/arrows between classified objects</li>
+                                <li>• AI suggestion of relationship types based on context and labels</li>
+                                <li>• Manual relationship type editing (dropdown with available types)</li>
+                                <li>• Add relationships manually if not detected</li>
+                                <li>• Delete incorrect relationships</li>
+                                <li>• Visual representation of relationships on diagram preview</li>
+                                <li>• Flow into mapping step (reuse Step 2 mapping UI)</li>
+                                <li>• Bulk remap functionality for relationship attributes</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold">🎯 Complete diagram → inventory workflow</p>
+                            <p class="text-gray-700 mt-2">Users can import objects AND relationships from diagrams end-to-end</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• CSV relationship import (Step 7)</li>
+                                <li>• Complex relationship attributes/metadata</li>
+                                <li>• Bidirectional relationship handling</li>
+                                <li>• Relationship validation rules (Step 8)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Step 4 object classification complete</p>
+                            <p class="text-sm text-gray-700">• Relationship types metadata API</p>
+                            <p class="text-sm text-gray-700">• Step 2 mapping framework (reuse)</p>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                            <p class="text-sm text-gray-700"><strong>Note:</strong> AI is applied to mapping suggestions (which type, which relationship), not to re-extracting objects from the image. Once extracted, the data is deterministic.</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Relationship editing UI mockups]</p>
+                            <p class="text-sm text-gray-600">• [Relationship types reference]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Phase 3: Core Completion",
+                subtitle: "Weeks 6-9 | Feature Parity & Polish",
+                content: `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="text-center mb-8">
+                            <h1 class="text-5xl font-bold text-orange-600 mb-4">Phase 3: Core Completion</h1>
+                            <h2 class="text-3xl text-gray-700 mb-6">Weeks 6-9</h2>
+                            <p class="text-xl text-gray-600">Feature Parity & Polish</p>
+                        </div>
+                        <div class="bg-purple-50 p-8 rounded-lg max-w-3xl">
+                            <p class="text-2xl font-semibold text-purple-800 mb-4">Goal</p>
+                            <p class="text-xl text-gray-700">Complete all fact sheet types, relationships, validation, and performance optimization</p>
+                        </div>
+                        <div class="mt-8 grid grid-cols-4 gap-4 max-w-5xl">
+                            <div class="bg-orange-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-orange-800 mb-2">Step 6</p>
+                                <p class="text-sm text-gray-700">All Fact Sheet Types</p>
+                            </div>
+                            <div class="bg-orange-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-orange-800 mb-2">Step 7</p>
+                                <p class="text-sm text-gray-700">Relationships (CSV)</p>
+                            </div>
+                            <div class="bg-orange-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-orange-800 mb-2">Step 8</p>
+                                <p class="text-sm text-gray-700">Validation & Quality</p>
+                            </div>
+                            <div class="bg-orange-50 p-6 rounded-lg text-center">
+                                <p class="font-bold text-orange-800 mb-2">Step 9</p>
+                                <p class="text-sm text-gray-700">Performance & Polish</p>
+                            </div>
+                        </div>
+                        <div class="mt-8 bg-green-50 p-6 rounded-lg max-w-3xl">
+                            <p class="text-lg font-bold text-green-800">✅ Core complete by March 18, 2025</p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 6 ====================
+            {
+                title: "Step 6: All Fact Sheet Types",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Currently limited to Applications. Users need to import all fact sheet types (Servers, Databases, Business Capabilities, etc.). This makes the tool viable for diverse inventory scenarios and achieves feature parity with old system.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Dynamic fact sheet type selection in wizard</li>
+                                <li>• Fetch available types from backend metadata API</li>
+                                <li>• Dynamic field mapping based on selected type</li>
+                                <li>• Support for custom fields per type</li>
+                                <li>• Type-specific validation rules</li>
+                                <li>• Mixed type import from single CSV (advanced mode)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700">→ Users can import any fact sheet type from CSV with proper field mapping</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No custom type creation (use existing types only)</li>
+                                <li>• No complex field types (multi-select, nested objects) - treat as strings</li>
+                                <li>• No cross-type dependencies within single import</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Weeks 1-2 CSV import framework</p>
+                            <p class="text-sm text-gray-700">• Backend metadata API for all fact sheet types</p>
+                            <p class="text-sm text-gray-700">• Type-specific validation rules documented</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Type selection UI mockup]</p>
+                            <p class="text-sm text-gray-600">• [Fact sheet types catalog]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 7 ====================
+            {
+                title: "Step 7: Relationships (CSV)",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Users need to import relationships from CSV files (not just diagrams). Common scenario: separate CSVs for entities and relationships. This achieves full relationship import capability across both import methods.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Import mode selection: Entities only, Relationships only, or Both</li>
+                                <li>• CSV format for relationships (from_id, to_id, type, metadata)</li>
+                                <li>• Relationship type selection and mapping</li>
+                                <li>• Reference resolution (match IDs to existing entities)</li>
+                                <li>• Validation: ensure both ends of relationship exist</li>
+                                <li>• Bulk relationship import with progress tracking</li>
+                                <li>• Error handling for missing references</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700">→ Users can import relationships from CSV, with proper validation and error handling</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No automatic entity creation from relationship references</li>
+                                <li>• No many-to-many relationship expansion</li>
+                                <li>• No relationship deduplication (Step 8)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Step 5 relationship concepts and data model</p>
+                            <p class="text-sm text-gray-700">• Backend relationship import API</p>
+                            <p class="text-sm text-gray-700">• Entity lookup/search API for reference resolution</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [CSV relationship format examples]</p>
+                            <p class="text-sm text-gray-600">• [Relationship import UI flow]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 8 ====================
+            {
+                title: "Step 8: Validation & Data Quality",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Before customer rollout, need robust validation to prevent bad data. Includes duplicate detection, required field enforcement, data type validation, and business rule checks. Critical for customer success.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Duplicate detection (exact and fuzzy matching)</li>
+                                <li>• Update vs. Create mode selection</li>
+                                <li>• Required field validation with clear error messages</li>
+                                <li>• Data type validation (dates, numbers, emails, URLs)</li>
+                                <li>• Business rule validation (type-specific rules)</li>
+                                <li>• Validation summary with error/warning counts</li>
+                                <li>• Partial import option: proceed with valid rows, skip invalid</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700">→ Validation prevents bad data imports and provides clear feedback</p>
+                            <p class="text-gray-700 mt-2 font-semibold text-orange-600">⚠️ Identify & warm up 5 customers for rollout</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• No custom validation rule creation</li>
+                                <li>• No ML-based duplicate detection (simple string matching)</li>
+                                <li>• No data transformation/cleaning features</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• All import types complete (Weeks 1-7)</p>
+                            <p class="text-sm text-gray-700">• Validation rules specification document</p>
+                            <p class="text-sm text-gray-700">• Backend validation service</p>
+                        </div>
+
+                        <div class="bg-red-50 p-4 rounded-lg border-2 border-red-500">
+                            <h3 class="text-lg font-bold text-red-800 mb-2">⚠️ Customer Preparation (Non-Dev Task)</h3>
+                            <p class="text-sm text-gray-700">By end of this step, CSM/Product must identify 5 customers for rollout starting Step 10</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Validation error UI patterns]</p>
+                            <p class="text-sm text-gray-600">• [Validation rules specification]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 9 ====================
+            {
+                title: "Step 9: Performance & Polish",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Final step before customer rollout. Focus on performance optimization, error handling, loading states, and polish. Ensures smooth customer experience from day one. This is core completion milestone.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-blue-500">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Large file handling (chunked processing, streaming)</li>
+                                <li>• Progress indicators for all async operations</li>
+                                <li>• Background import processing with notifications</li>
+                                <li>• Performance testing and optimization (>1000 rows)</li>
+                                <li>• Error recovery and retry mechanisms</li>
+                                <li>• Loading states and skeleton screens</li>
+                                <li>• Browser performance testing (memory, CPU)</li>
+                                <li>• Final UX polish pass</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold">✅ Core functionality complete - Ready for customer rollout</p>
+                            <p class="text-gray-700 mt-2">Can import 5000+ rows in <5 min, smooth UI with no blocking operations</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• Advanced features (templates, scheduling) in Weeks 10-11</li>
+                                <li>• Excel support (Step 12+)</li>
+                                <li>• Import history/audit log (future)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• All features from Weeks 1-8 complete</p>
+                            <p class="text-sm text-gray-700">• Performance benchmarking tools setup</p>
+                            <p class="text-sm text-gray-700">• Test data sets (small, medium, large)</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Performance test results]</p>
+                            <p class="text-sm text-gray-600">• [Loading states documentation]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Phase 4: Customer Rollout",
+                subtitle: "Weeks 10-11 | Launch & Scale",
+                content: `
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="text-center mb-8">
+                            <h1 class="text-5xl font-bold text-red-600 mb-4">Phase 4: Customer Rollout</h1>
+                            <h2 class="text-3xl text-gray-700 mb-6">Weeks 10-11</h2>
+                            <p class="text-xl text-gray-600">Launch & Scale to 5 Customers</p>
+                        </div>
+                        <div class="bg-red-50 p-8 rounded-lg max-w-3xl border-2 border-red-500">
+                            <p class="text-2xl font-semibold text-red-800 mb-4">🎯 CRITICAL GOAL</p>
+                            <p class="text-xl text-gray-700 font-bold">5 customers actively using by March 31, 2025</p>
+                        </div>
+                        <div class="mt-8 grid grid-cols-2 gap-6 max-w-3xl">
+                            <div class="bg-green-50 p-6 rounded-lg text-center border-2 border-green-500">
+                                <p class="font-bold text-green-800 mb-2">Step 10</p>
+                                <p class="text-sm text-gray-700 mb-3">Reliability + ROLLOUT</p>
+                                <p class="text-xs text-green-700 font-semibold">🚀 First 2-3 customers</p>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-lg text-center border-2 border-green-600">
+                                <p class="font-bold text-green-800 mb-2">Step 11</p>
+                                <p class="text-sm text-gray-700 mb-3">Power Features + ROLLOUT</p>
+                                <p class="text-xs text-green-700 font-semibold">🎯 Total 5 customers</p>
+                            </div>
+                        </div>
+                        <div class="mt-8 bg-yellow-50 p-6 rounded-lg max-w-3xl border-2 border-yellow-500">
+                            <p class="text-sm font-semibold text-yellow-800">Concurrent: Development + Customer Support</p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 10 ====================
+            {
+                title: "Step 10: Reliability + ROLLOUT",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">First customer rollout step. Focus on reliability, monitoring, error tracking, and support readiness. Concurrent development of nice-to-have features while onboarding first 2-3 customers.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-green-500">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>Reliability:</strong> Error tracking, logging, monitoring dashboards</li>
+                                <li>• <strong>Support:</strong> Customer onboarding materials, video tutorials</li>
+                                <li>• <strong>Rollout:</strong> Onboard first 2-3 customers with hands-on support</li>
+                                <li>• Import history/audit log (who imported what when)</li>
+                                <li>• Rollback capability for failed imports</li>
+                                <li>• Real-time support channel (Slack/Teams integration)</li>
+                                <li>• Feedback collection mechanism</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg border-2 border-green-500">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold">🚀 INITIAL ROLLOUT - First 2-3 customers onboarded</p>
+                            <p class="text-gray-700 mt-2">Customers successfully import real data with support, no critical bugs</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• Full self-service onboarding (provide hands-on support this step)</li>
+                                <li>• Advanced power features (Step 11)</li>
+                                <li>• Automated customer health monitoring (future)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Step 9 core complete and stable</p>
+                            <p class="text-sm text-gray-700">• 5 customers identified and prepped (from Step 8)</p>
+                            <p class="text-sm text-gray-700">• Support team trained and ready</p>
+                            <p class="text-sm text-gray-700">• Monitoring/logging infrastructure ready</p>
+                        </div>
+
+                        <div class="bg-red-50 p-4 rounded-lg border-2 border-red-500">
+                            <h3 class="text-lg font-bold text-red-800 mb-2">⚠️ Critical Actions</h3>
+                            <p class="text-sm text-gray-700">• Schedule kickoff calls with first 2-3 customers</p>
+                            <p class="text-sm text-gray-700">• Daily stand-ups to track rollout progress</p>
+                            <p class="text-sm text-gray-700">• On-call rotation for immediate issue response</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Onboarding materials]</p>
+                            <p class="text-sm text-gray-600">• [Customer rollout plan]</p>
+                            <p class="text-sm text-gray-600">• [Monitoring dashboards]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // ==================== Step 11 ====================
+            {
+                title: "Step 11: Power Features + ROLLOUT",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">Problem Statement (and Value Proposition)</h3>
+                            <p class="text-gray-700">Final push to reach 5 customers by March 31. Add power features that improve efficiency for advanced users. Incorporate feedback from Step 10 customers. This is the deadline step.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-2 border-green-500">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Key Functionality (Requirements)</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>Rollout:</strong> Onboard remaining 2-3 customers (reach 5 total)</li>
+                                <li>• <strong>Templates:</strong> Save and reuse mapping configurations</li>
+                                <li>• <strong>Scheduling:</strong> Schedule recurring imports (optional, if time)</li>
+                                <li>• Bulk operations: Multi-file import queue</li>
+                                <li>• Advanced filters in review step</li>
+                                <li>• Export mapping configuration for sharing</li>
+                                <li>• Incorporate feedback from Step 10 customers</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg border-2 border-green-600">
+                            <h3 class="text-lg font-bold text-green-800 mb-2">Success Criteria</h3>
+                            <p class="text-gray-700 font-bold text-xl">🎯 DEADLINE: 5 customers actively using by March 31</p>
+                            <p class="text-gray-700 mt-2">All 5 customers have completed at least one successful import</p>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-orange-800 mb-2">Limitations/Out of Scope</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>• Excel support (Step 12 - Post-Q1)</li>
+                                <li>• Advanced scheduling (basic only if time permits)</li>
+                                <li>• API for programmatic imports (future)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-blue-800 mb-2">Dependencies</h3>
+                            <p class="text-sm text-gray-700">• Step 10 rollout stable and successful</p>
+                            <p class="text-sm text-gray-700">• Feedback from first customers collected</p>
+                            <p class="text-sm text-gray-700">• Remaining 2-3 customers ready to onboard</p>
+                        </div>
+
+                        <div class="bg-red-50 p-4 rounded-lg border-2 border-red-600">
+                            <h3 class="text-lg font-bold text-red-800 mb-2">🎯 Deadline: March 31, 2025</h3>
+                            <p class="text-sm text-gray-700 font-semibold">5 customers must be actively using the new inventory builder</p>
+                            <p class="text-sm text-gray-700 mt-2">Daily check-ins with customers to ensure success</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Visuals/Mockups & Relevant URLs</h3>
+                            <p class="text-sm text-gray-600">• [Template management UI]</p>
+                            <p class="text-sm text-gray-600">• [Customer success metrics dashboard]</p>
+                            <p class="text-sm text-gray-600">• [Confluence epic link needed]</p>
+                        </div>
+
+                        <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-600">
+                            <h3 class="text-lg font-bold text-purple-800 mb-2">🎨 Figma Design</h3>
+                            <p class="text-sm text-gray-700">
+                                <a href="https://www.figma.com/design/g6sf9m99hum60c0Z3XaC6L/Unified-import-exploration?node-id=4219-23631&p=f&t=JE0CmcfBuHGyuWW0-0" target="_blank" class="text-purple-600 hover:underline font-semibold">
+                                    View Design in Figma →
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Timeline Overview",
+                subtitle: "",
+                content: `
+                    <div class="space-y-4">
+                        <div class="bg-red-50 p-4 rounded-lg mb-4">
+                            <p class="text-lg font-bold text-red-800">Critical: Core complete by March 18 | Customer rollout starts March 19 | 5 customers by March 31</p>
+                        </div>
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-gray-800 text-white">
+                                    <th class="border p-2 text-left">Step</th>
+                                    <th class="border p-2 text-left">Dates</th>
+                                    <th class="border p-2 text-left">Focus</th>
+                                    <th class="border p-2 text-left">Milestone</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs">
+                                <tr class="bg-blue-50"><td class="border p-2">1</td><td class="border p-2">Jan 15-21</td><td class="border p-2">CSV upload</td><td class="border p-2">Foundation</td></tr>
+                                <tr class="bg-white"><td class="border p-2">2</td><td class="border p-2">Jan 22-28</td><td class="border p-2">Mapping & import</td><td class="border p-2 font-bold text-green-600">🎯 First demo</td></tr>
+                                <tr class="bg-blue-50"><td class="border p-2">3</td><td class="border p-2">Jan 29-Feb 4</td><td class="border p-2">Image detection</td><td class="border p-2">AI integration</td></tr>
+                                <tr class="bg-white"><td class="border p-2">4</td><td class="border p-2">Feb 5-11</td><td class="border p-2">Object classification</td><td class="border p-2">Diagram editing</td></tr>
+                                <tr class="bg-blue-50"><td class="border p-2">5</td><td class="border p-2">Feb 12-18</td><td class="border p-2">Relationships</td><td class="border p-2 font-bold text-green-600">🎯 Diagram complete</td></tr>
+                                <tr class="bg-white"><td class="border p-2">6</td><td class="border p-2">Feb 19-25</td><td class="border p-2">All fact sheet types</td><td class="border p-2">Dynamic types</td></tr>
+                                <tr class="bg-blue-50"><td class="border p-2">7</td><td class="border p-2">Feb 26-Mar 4</td><td class="border p-2">Relationships (CSV)</td><td class="border p-2">Full relationships</td></tr>
+                                <tr class="bg-white"><td class="border p-2">8</td><td class="border p-2">Mar 5-11</td><td class="border p-2">Validation</td><td class="border p-2 font-bold text-orange-600">⚠️ ID 5 customers</td></tr>
+                                <tr class="bg-blue-50"><td class="border p-2">9</td><td class="border p-2">Mar 12-18</td><td class="border p-2">Performance</td><td class="border p-2 font-bold text-green-600">✅ Core complete</td></tr>
+                                <tr class="bg-green-100 border-2 border-green-600"><td class="border p-2 font-bold">10</td><td class="border p-2 font-bold">Mar 19-25</td><td class="border p-2 font-bold">Reliability + ROLLOUT</td><td class="border p-2 font-bold text-green-600">🚀 2-3 customers</td></tr>
+                                <tr class="bg-green-100 border-2 border-green-600"><td class="border p-2 font-bold">11</td><td class="border p-2 font-bold">Mar 26-Apr 1</td><td class="border p-2 font-bold">Power features + ROLLOUT</td><td class="border p-2 font-bold text-green-600">🎯 5 customers</td></tr>
+                                <tr class="bg-gray-100"><td class="border p-2">12</td><td class="border p-2">Apr 2-8</td><td class="border p-2">Excel support</td><td class="border p-2 text-gray-600">Post-Q1</td></tr>
+                                <tr class="bg-gray-100"><td class="border p-2">13</td><td class="border p-2">Apr 9-15</td><td class="border p-2">Templates & polish</td><td class="border p-2 text-gray-600">Post-Q1</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            {
+                title: "Critical Success Points",
+                subtitle: "",
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="bg-green-100 border-l-4 border-green-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">✅ Step 2 (Jan 28)</h3>
+                                <p class="text-lg">Working demo for stakeholders</p>
+                            </div>
+
+                            <div class="bg-green-100 border-l-4 border-green-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">✅ Step 5 (Feb 18)</h3>
+                                <p class="text-lg">Diagram import workflow complete</p>
+                            </div>
+
+                            <div class="bg-orange-100 border-l-4 border-orange-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">⚠️ Step 8 (Mar 11)</h3>
+                                <p class="text-lg">Core validation complete + <strong>Identify & warm up 5 customers</strong></p>
+                            </div>
+
+                            <div class="bg-green-100 border-l-4 border-green-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">✅ Step 9 (Mar 18)</h3>
+                                <p class="text-lg"><strong>Core functionality complete - Ready for customer rollout</strong></p>
+                            </div>
+
+                            <div class="bg-blue-100 border-l-4 border-blue-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">🚀 Step 10 (Mar 19)</h3>
+                                <p class="text-lg"><strong>INITIAL ROLLOUT - First 2-3 customers onboarded</strong></p>
+                            </div>
+
+                            <div class="bg-red-100 border-l-4 border-red-500 p-6">
+                                <h3 class="text-xl font-bold mb-2">🎯 Step 11 (Mar 31)</h3>
+                                <p class="text-lg"><strong>DEADLINE: 5 customers actively using the new inventory builder</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Next Steps & Risk Mitigation",
+                subtitle: "",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-blue-800">Immediate Actions (Step 1)</h3>
+                            <ol class="space-y-3 text-lg">
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3 font-bold">1.</span>
+                                    <span><strong>Review Figma Designs:</strong> Confirm 3-step wizard structure with team (Ania's designs)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3 font-bold">2.</span>
+                                    <span><strong>AI/Vision Service Selection:</strong> Evaluate and select provider by Jan 17</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3 font-bold">3.</span>
+                                    <span><strong>Team Allocation:</strong> Assign frontend, backend, and AI integration resources</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-3 font-bold">4.</span>
+                                    <span><strong>Epic Breakdown:</strong> Create small, parallel-trackable epics (Step 6+ can split)</span>
+                                </li>
+                            </ol>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-orange-800">Critical: Customer Preparation (Step 8)</h3>
+                            <p class="text-lg mb-3">By <strong>March 11</strong>, identify and prepare 5 customers:</p>
+                            <ul class="space-y-2 text-base">
+                                <li>• Select customers who frequently use inventory import</li>
+                                <li>• Brief them on timeline and expectations</li>
+                                <li>• Prepare onboarding materials</li>
+                                <li>• Schedule kickoff meetings for Step 10 (March 19)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h3 class="text-2xl font-semibold mb-4 text-green-800">Success Criteria</h3>
+                            <div class="space-y-2 text-lg">
+                                <p>✅ Working demo by <strong>Jan 28</strong></p>
+                                <p>✅ Diagram import by <strong>Feb 18</strong></p>
+                                <p>✅ Core complete by <strong>Mar 18</strong></p>
+                                <p>✅ Customer rollout <strong>Mar 19</strong></p>
+                                <p>🎯 <strong>5 customers using by Mar 31</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "Resources",
+                subtitle: "UI Design References",
+                content: `
+                    <div class="space-y-6">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">UI Design Screenshots</h2>
+                            <p class="text-gray-600 mb-6">The following screenshots show the LeanIX UI design patterns that should be followed in the implementation:</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">1. File Upload Modal</h3>
+                                <p class="text-sm text-gray-600 mb-3">Initial file upload interface with drag-drop functionality and file type validation.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3EFile Upload Modal - Screenshot 1%3C/text%3E%3C/svg%3E" alt="File Upload Modal" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Drag-drop zone, file type indicators (.csv, .png, .jpg), validation messages</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">2. Architecture Diagram Preview</h3>
+                                <p class="text-sm text-gray-600 mb-3">Image preview showing detected architecture diagram with highlighted objects.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3ETechSolutions As-is Architecture - Screenshot 2%3C/text%3E%3C/svg%3E" alt="Architecture Diagram" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Large image preview, object detection visualization, colored boxes/highlights</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">3. Mapping Interface (Step 2)</h3>
+                                <p class="text-sm text-gray-600 mb-3">Column mapping screen with AI-powered suggestions and progress tracking.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3EMapping Interface - Screenshot 3%3C/text%3E%3C/svg%3E" alt="Mapping Interface" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Two-column layout, dropdown selectors, mapping progress counter ("8 of 11 columns mapped")</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">4. Review & Import Table (Step 3)</h3>
+                                <p class="text-sm text-gray-600 mb-3">Review table showing all detected items with type, status, and action buttons.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3EReview Table - Screenshot 4%3C/text%3E%3C/svg%3E" alt="Review Table" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Data table with checkboxes, fact sheet type dropdowns, status badges, action buttons</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">5. Import Overview Dashboard</h3>
+                                <p class="text-sm text-gray-600 mb-3">Summary dashboard showing import statistics and status.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3EImport Overview - Screenshot 5%3C/text%3E%3C/svg%3E" alt="Import Overview" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Statistics cards (Ready for Review, Added to Inventory, Total Discoveries), file list with status</p>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <h3 class="font-semibold text-lg mb-3 text-gray-800">6. Analysis Loading State</h3>
+                                <p class="text-sm text-gray-600 mb-3">Loading screen displayed during AI analysis of uploaded files.</p>
+                                <div class="border border-gray-300 rounded overflow-hidden">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect fill='%23f8fafc' width='1200' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='%2364748b'%3EAnalyzing... - Screenshot 6%3C/text%3E%3C/svg%3E" alt="Loading State" class="w-full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Key components: Animated loading indicator, "Analyzing" message, time estimate, cancel option</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mt-6">
+                            <p class="text-sm font-semibold text-blue-800 mb-2">📝 Note</p>
+                            <p class="text-sm text-gray-700">These screenshots represent the target UI design. Actual screenshots should be embedded here by replacing the placeholder SVGs with real image URLs or base64-encoded images.</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlide(index, updateHistory = true) {
+            const slide = slides[index];
+            document.getElementById('slide-title').textContent = slide.title;
+            document.getElementById('slide-subtitle').textContent = slide.subtitle || '';
+            document.getElementById('slide-subtitle').style.display = slide.subtitle ? 'block' : 'none';
+            document.getElementById('slide-content').innerHTML = slide.content;
+            document.getElementById('slide-counter').textContent = `${index + 1} / ${slides.length}`;
+
+            // Update URL hash for browser navigation
+            if (updateHistory) {
+                window.history.pushState({ slide: index }, '', `#slide-${index}`);
+            }
+
+            // Update buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+
+            // Update breadcrumb
+            const breadcrumb = document.getElementById('breadcrumb-current');
+            if (breadcrumb) {
+                breadcrumb.textContent = slide.title;
+            }
+
+            // Update side navigation
+            updateSideNavigation(index);
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                renderSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide(currentSlide);
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            renderSlide(currentSlide);
+        }
+
+        // Parse URL hash to get initial slide
+        function getSlideFromHash() {
+            const hash = window.location.hash;
+            if (hash) {
+                const match = hash.match(/#slide-(\d+)/);
+                if (match) {
+                    const slideIndex = parseInt(match[1], 10);
+                    if (slideIndex >= 0 && slideIndex < slides.length) {
+                        return slideIndex;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && typeof event.state.slide === 'number') {
+                currentSlide = event.state.slide;
+                renderSlide(currentSlide, false);
+            } else {
+                // Fallback to parsing hash
+                currentSlide = getSlideFromHash();
+                renderSlide(currentSlide, false);
+            }
+        });
+
+        // Event listeners
+        document.getElementById('next-btn').onclick = nextSlide;
+        document.getElementById('prev-btn').onclick = prevSlide;
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 's' || e.key === 'S') window.print();
+        });
+
+        // Navigation structure
+        // firstSlide: the slide to navigate to when clicking the phase header
+        const navigationStructure = [
+            { type: 'slide', index: 0, title: 'Title Slide', section: 'intro' },
+            { type: 'slide', index: 1, title: 'Initiative Overview', section: 'intro' },
+            { type: 'section', title: 'Phase 1: Foundation', phase: 1, firstSlide: 2 },
+            { type: 'slide', index: 2, title: 'Phase 1 Overview', section: 'phase1' },
+            { type: 'slide', index: 3, title: 'Step 1: Basic CSV Import', section: 'phase1' },
+            { type: 'slide', index: 4, title: 'Step 2: Mapping & Import', section: 'phase1' },
+            { type: 'slide', index: 5, title: 'Step 3: Image Detection', section: 'phase1' },
+            { type: 'section', title: 'Phase 2: Diagram Recognition', phase: 2, firstSlide: 6 },
+            { type: 'slide', index: 6, title: 'Phase 2 Overview', section: 'phase2' },
+            { type: 'slide', index: 7, title: 'Step 4: Object Classification', section: 'phase2' },
+            { type: 'slide', index: 8, title: 'Step 5: Relationships (Diagram)', section: 'phase2' },
+            { type: 'section', title: 'Phase 3: Core Completion', phase: 3, firstSlide: 9 },
+            { type: 'slide', index: 9, title: 'Phase 3 Overview', section: 'phase3' },
+            { type: 'slide', index: 10, title: 'Step 6: All Fact Sheet Types', section: 'phase3' },
+            { type: 'slide', index: 11, title: 'Step 7: Relationships (CSV)', section: 'phase3' },
+            { type: 'slide', index: 12, title: 'Step 8: Validation & Data Quality', section: 'phase3' },
+            { type: 'slide', index: 13, title: 'Step 9: Performance & Polish', section: 'phase3' },
+            { type: 'section', title: 'Phase 4: Customer Rollout', phase: 4, firstSlide: 14 },
+            { type: 'slide', index: 14, title: 'Phase 4 Overview', section: 'phase4' },
+            { type: 'slide', index: 15, title: 'Step 10: Reliability + ROLLOUT', section: 'phase4' },
+            { type: 'slide', index: 16, title: 'Step 11: Power Features + ROLLOUT', section: 'phase4' },
+            { type: 'section', title: 'Summary', phase: 5, firstSlide: 17 },
+            { type: 'slide', index: 17, title: 'Timeline Overview', section: 'summary' },
+            { type: 'slide', index: 18, title: 'Critical Success Points', section: 'summary' },
+            { type: 'slide', index: 19, title: 'Next Steps & Risk Mitigation', section: 'summary' },
+            { type: 'section', title: 'Resources', phase: 6, firstSlide: 20 },
+            { type: 'slide', index: 20, title: 'Resources', section: 'resources' }
+        ];
+
+        function buildSideNavigation() {
+            const navContent = document.getElementById('side-nav-content');
+            let currentSection = null;
+            let navHTML = '<div class="nav-section expanded" data-section="intro"><div class="nav-section-header" onclick="goToSlide(0); event.stopPropagation();"><span class="nav-section-title clickable" onclick="goToSlide(0); event.stopPropagation();">Introduction</span><svg class="nav-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="toggleSection(event, this.parentElement); event.stopPropagation();"><polyline points="9 18 15 12 9 6"></polyline></svg></div><div class="nav-items">';
+
+            navigationStructure.forEach((item, idx) => {
+                if (item.type === 'section') {
+                    // Close previous section
+                    if (currentSection !== null) {
+                        navHTML += '</div></div>';
+                    }
+                    // Start new section with clickable header
+                    currentSection = item.section || `phase${item.phase}`;
+                    const firstSlide = item.firstSlide || 0;
+                    navHTML += `<div class="nav-section" data-section="${currentSection}">
+                        <div class="nav-section-header" onclick="goToSlide(${firstSlide}); event.stopPropagation();">
+                            <span class="nav-section-title clickable" onclick="goToSlide(${firstSlide}); event.stopPropagation();">${item.title}</span>
+                            <svg class="nav-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="toggleSection(event, this.parentElement); event.stopPropagation();">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="nav-items">`;
+                } else if (item.type === 'slide') {
+                    navHTML += `<div class="nav-item" data-slide="${item.index}" onclick="goToSlide(${item.index})">${item.title}</div>`;
+                }
+            });
+
+            // Close last section
+            navHTML += '</div></div>';
+            navContent.innerHTML = navHTML;
+        }
+
+        function toggleSection(event, header) {
+            event.stopPropagation();
+            const section = header.parentElement;
+            section.classList.toggle('expanded');
+        }
+
+        function updateSideNavigation(currentIndex) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to current slide
+            const activeItem = document.querySelector(`.nav-item[data-slide="${currentIndex}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+
+                // Expand the section containing this item
+                const section = activeItem.closest('.nav-section');
+                if (section && !section.classList.contains('expanded')) {
+                    section.classList.add('expanded');
+                }
+
+                // Scroll the nav item into view
+                activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Toggle navigation
+        let navHidden = false;
+        document.getElementById('nav-toggle').addEventListener('click', () => {
+            navHidden = !navHidden;
+            const sideNav = document.getElementById('side-nav');
+            const app = document.getElementById('app');
+            const toggle = document.getElementById('nav-toggle');
+
+            if (navHidden) {
+                sideNav.classList.add('hidden');
+                app.classList.add('nav-hidden');
+                toggle.classList.add('nav-hidden');
+                toggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+            } else {
+                sideNav.classList.remove('hidden');
+                app.classList.remove('nav-hidden');
+                toggle.classList.remove('nav-hidden');
+                toggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+            }
+        });
+
+        // ============================================================
+        // FEATURE CHECKLIST
+        // ============================================================
+        let checklistData = {
+            "metadata": {
+                "lastUpdated": "2025-01-28",
+                "totalFeatures": 10,
+                "completedFeatures": 0
+            },
+            "features": [
+                {
+                    "id": "csv-import",
+                    "title": "CSV File Import",
+                    "description": "Upload and parse CSV files with drag-and-drop support",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 1
+                },
+                {
+                    "id": "column-mapping",
+                    "title": "Column Mapping UI",
+                    "description": "Map CSV columns to inventory fields with AI suggestions",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 2
+                },
+                {
+                    "id": "wizard-stepper",
+                    "title": "Multi-step Wizard Component",
+                    "description": "Reusable wizard stepper with navigation and validation",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 1
+                },
+                {
+                    "id": "image-upload",
+                    "title": "Diagram Image Upload",
+                    "description": "Support for PNG/JPG diagram uploads",
+                    "priority": "medium",
+                    "completed": false,
+                    "step": 3
+                },
+                {
+                    "id": "object-detection",
+                    "title": "AI Object Detection",
+                    "description": "Detect objects in architecture diagrams using vision API",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 3
+                },
+                {
+                    "id": "object-classification",
+                    "title": "Object Classification",
+                    "description": "Classify detected objects into fact sheet types (Application, Server, etc.)",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 4
+                },
+                {
+                    "id": "relationship-detection",
+                    "title": "Relationship Detection (Diagrams)",
+                    "description": "Detect and classify arrows/connections in diagrams",
+                    "priority": "medium",
+                    "completed": false,
+                    "step": 5
+                },
+                {
+                    "id": "multi-type-support",
+                    "title": "All Fact Sheet Type Support",
+                    "description": "Support import for all fact sheet types (not just Applications)",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 6
+                },
+                {
+                    "id": "validation-engine",
+                    "title": "Data Validation Engine",
+                    "description": "Duplicate detection, required fields, data type validation",
+                    "priority": "high",
+                    "completed": false,
+                    "step": 8
+                },
+                {
+                    "id": "error-recovery",
+                    "title": "Import Error Recovery",
+                    "description": "Resume failed imports and handle large files",
+                    "priority": "medium",
+                    "completed": false,
+                    "step": 9
+                }
+            ]
+        };
+
+        function loadChecklist() {
+            // Check if there's saved state in localStorage
+            const saved = localStorage.getItem('feature-checklist');
+            if (saved) {
+                try {
+                    const savedData = JSON.parse(saved);
+                    // Merge saved completion state with embedded data
+                    checklistData.features.forEach(feature => {
+                        const savedFeature = savedData.features.find(f => f.id === feature.id);
+                        if (savedFeature) {
+                            feature.completed = savedFeature.completed;
+                        }
+                    });
+                } catch (error) {
+                    console.error('Failed to load saved checklist state:', error);
+                }
+            }
+            renderChecklist();
+        }
+
+        function renderChecklist() {
+            if (!checklistData) return;
+
+            const container = document.getElementById('checklist-items');
+            const total = checklistData.features.length;
+            const completed = checklistData.features.filter(f => f.completed).length;
+            const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            // Update stats
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-completed').textContent = completed;
+            document.getElementById('stat-progress').textContent = progress + '%';
+
+            // Render items
+            container.innerHTML = checklistData.features.map(feature => `
+                <div class="p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors">
+                    <input
+                        type="checkbox"
+                        id="check-${feature.id}"
+                        ${feature.completed ? 'checked' : ''}
+                        onchange="toggleFeature('${feature.id}')"
+                        class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    />
+                    <div class="flex-1">
+                        <label for="check-${feature.id}" class="cursor-pointer">
+                            <div class="font-semibold text-gray-900 ${feature.completed ? 'line-through text-gray-500' : ''}">${feature.title}</div>
+                            <div class="text-sm text-gray-600 mt-1">${feature.description}</div>
+                            <div class="flex gap-3 mt-2">
+                                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">Step ${feature.step}</span>
+                                <span class="text-xs px-2 py-1 rounded-full ${getPriorityColor(feature.priority)}">${feature.priority.toUpperCase()}</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getPriorityColor(priority) {
+            switch(priority) {
+                case 'high': return 'bg-red-100 text-red-700';
+                case 'medium': return 'bg-yellow-100 text-yellow-700';
+                case 'low': return 'bg-green-100 text-green-700';
+                default: return 'bg-gray-100 text-gray-700';
+            }
+        }
+
+        function toggleFeature(featureId) {
+            const feature = checklistData.features.find(f => f.id === featureId);
+            if (feature) {
+                feature.completed = !feature.completed;
+                checklistData.metadata.completedFeatures = checklistData.features.filter(f => f.completed).length;
+                checklistData.metadata.lastUpdated = new Date().toISOString().split('T')[0];
+
+                // Save to localStorage (since we can't write to JSON file from browser)
+                localStorage.setItem('feature-checklist', JSON.stringify(checklistData));
+
+                renderChecklist();
+            }
+        }
+
+        function switchView(view) {
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.view === view) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Show/hide views
+            const timelineView = document.querySelector('.slide-container:not(#checklist-view)');
+            const checklistView = document.getElementById('checklist-view');
+            const sideNav = document.getElementById('side-nav');
+            const navToggle = document.getElementById('nav-toggle');
+            const breadcrumb = document.querySelector('.breadcrumb');
+            const app = document.getElementById('app');
+
+            if (view === 'checklist') {
+                timelineView.style.display = 'none';
+                checklistView.style.display = 'flex';
+                sideNav.style.display = 'none';
+                navToggle.style.display = 'none';
+                breadcrumb.style.display = 'none';
+                app.classList.add('nav-hidden');
+            } else {
+                timelineView.style.display = 'flex';
+                checklistView.style.display = 'none';
+                sideNav.style.display = '';  // Clear inline style
+                navToggle.style.display = 'flex';
+                breadcrumb.style.display = 'block';
+                // Restore the nav state properly based on navHidden variable
+                if (navHidden) {
+                    sideNav.classList.add('hidden');
+                    app.classList.add('nav-hidden');
+                    navToggle.classList.add('nav-hidden');
+                } else {
+                    sideNav.classList.remove('hidden');
+                    app.classList.remove('nav-hidden');
+                    navToggle.classList.remove('nav-hidden');
+                }
+            }
+        }
+
+        // Initialize - load slide from URL or start at 0
+        currentSlide = getSlideFromHash();
+        buildSideNavigation();
+        renderSlide(currentSlide);
+        loadChecklist(); // Load checklist data
+    </script>
+</body>
+</html>

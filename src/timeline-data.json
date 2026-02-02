@@ -1,0 +1,65 @@
+{
+  "project": {
+    "name": "Inventory Builder Rebuild",
+    "timeline": "January 15 - April 2, 2025",
+    "goal": "5 Customers Using by March 31",
+    "productboard_url": "https://leanix.productboard.com/detail/MTpQbUVudGl0eTphOWRmYzdlYS0wMDdlLTQ1ZGYtYWRhOC05ODM1M2ZjNzU1Mzg="
+  },
+  "steps": [
+    {
+      "step": 1,
+      "title": "Basic CSV Import",
+      "productboard_url": ""
+    },
+    {
+      "step": 2,
+      "title": "Mapping & Import",
+      "productboard_url": ""
+    },
+    {
+      "step": 3,
+      "title": "Image Detection",
+      "productboard_url": ""
+    },
+    {
+      "step": 4,
+      "title": "Object Classification",
+      "productboard_url": ""
+    },
+    {
+      "step": 5,
+      "title": "Relationships (Diagram)",
+      "productboard_url": ""
+    },
+    {
+      "step": 6,
+      "title": "All Fact Sheet Types",
+      "productboard_url": ""
+    },
+    {
+      "step": 7,
+      "title": "Relationships (CSV)",
+      "productboard_url": ""
+    },
+    {
+      "step": 8,
+      "title": "Validation & Data Quality",
+      "productboard_url": ""
+    },
+    {
+      "step": 9,
+      "title": "Performance & Polish",
+      "productboard_url": ""
+    },
+    {
+      "step": 10,
+      "title": "Reliability + ROLLOUT",
+      "productboard_url": ""
+    },
+    {
+      "step": 11,
+      "title": "Power Features + ROLLOUT",
+      "productboard_url": ""
+    }
+  ]
+}

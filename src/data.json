@@ -1,0 +1,269 @@
+I found 7 relevant Productboard notes about the Inventory Builder and Excel import/export. The JSON below contains one element per insight (each mapped to a Productboard note). Each element includes: source_url (non-API URL), content (note body), relevant metadata (createdAt, updatedAt, state, owner, company id, tags/features where available) and 1–3 concrete feature requests derived from the insight.
+
+This output is based on 7 Productboard note entities.
+
+```json
+{
+  "query": "inventory builder OR excel import",
+  "entitiesCount": 7,
+  "insights": [
+    {
+      "id": "86fd89b9-2f59-4b3d-8325-39c74cea59da",
+      "title": "Train Inventory Builder AI on common diagram sources",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/51161851",
+      "content": "From a chat with a CSM:\nNew customers often come with diagrams from a known set of legacy/competitor sources (Archimate, Ardoq, Visio, Drawio...). Training our LLM on those could improve results for common diagram types and styles (such as recognizing relations better).",
+      "metadata": {
+        "createdAt": "2025-10-08T14:46:06.595554Z",
+        "updatedAt": "2025-10-08T14:49:36.693334Z",
+        "state": "unprocessed",
+        "owner": {
+          "name": "Ania Chojnacka",
+          "email": "ania.chojnacka@leanix.net"
+        },
+        "companyId": "2143dbc9-d42d-4b8f-a438-73ba5ba54891",
+        "tags": ["inventory builder"]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ib-001",
+          "summary": "Train Inventory Builder on common diagram formats",
+          "details": "Train and validate the Inventory Builder's models on common diagram sources/formats (Archimate, Ardoq, Visio, Drawio, PPT) so extraction of shapes, labels and relations improves out-of-the-box.",
+          "impact": "Higher extraction accuracy, fewer manual corrections, faster onboarding of customers with legacy diagrams.",
+          "possible_solutions": [
+            "Build dataset of common diagram formats + ground-truth annotations and fine-tune LLM/vision models.",
+            "Provide per-workspace 'upload sample diagrams' option to adapt the model to customer conventions."
+          ]
+        },
+        {
+          "id": "FR-ib-002",
+          "summary": "Provide format-detection + quality score",
+          "details": "Detect input diagram format, run specialized parser for that format and show a confidence/quality score and quick-fix suggestions.",
+          "impact": "Users understand expected accuracy and can choose a preview/dry-run before committing imports."
+        }
+      ]
+    },
+    {
+      "id": "1c66b16f-7be2-47cf-acdc-0c79caee078b",
+      "title": "Slack message from Anonymous (Important)",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/52476047",
+      "content": "Hi Patrick, to be honest (and I should have read the documentation better), it didn't quite work the way I wanted.\nI was hoping to be able to upload any image (PNG, JPG) and\n1. It would convert the image into draw.io shapes\n2. Match those shapes to existing dictionary entries\n3. Propose new factsheets when the dictionary items don't exist\n4. End result is a new free style drawing which is linked to the existing and new dictionary items\nThis is a really common case for us (especially converting ppt slides etc) that AI could really solve. But I didn't really find the inventory builder to be an intuitive way to achieve this.",
+      "metadata": {
+        "createdAt": "2025-12-17T15:46:50.000000Z",
+        "updatedAt": "2025-12-22T13:40:18.620780Z",
+        "state": "processed",
+        "owner": {
+          "name": "Johannes Wilden",
+          "email": "johannes.wilden@leanix.net"
+        },
+        "companyId": "2143dbc9-d42d-4b8f-a438-73ba5ba54891",
+        "source": {"origin": "slack"},
+        "features": [
+          {
+            "id": "462e5cda-8c2c-4684-aa11-c5440643eb3b",
+            "type": "feature"
+          }
+        ]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ib-003",
+          "summary": "Image-to-diagram conversion with dictionary mapping",
+          "details": "Allow users to upload PNG/JPG (including PPT slides) and convert to editable diagram shapes. Provide an interactive mapping step that: (a) matches recognized shapes to dictionary items, (b) suggests creation of new fact sheets when no match exists, and (c) outputs an editable draw.io-style diagram linked to the inventory.",
+          "impact": "Reduces manual recreation of diagrams, speeds migration from legacy slides, improves capture completeness.",
+          "possible_solutions": [
+            "Add an 'Image import' pipeline: OCR/text extraction + shape detection + mapping UI.",
+            "Add a review screen showing detected shapes and suggested dictionary matches with accept/decline and quick 'create factsheet' options."
+          ]
+        },
+        {
+          "id": "FR-ib-004",
+          "summary": "Interactive confirm-and-link wizard",
+          "details": "A step-by-step wizard that guides the user through conversion, matching, creation of new entries and final linking to inventory.",
+          "impact": "Improves usability and reduces failed imports due to ambiguous mapping."
+        }
+      ]
+    },
+    {
+      "id": "62abaa79-a741-4ed2-aacb-f43ddd83c8d1",
+      "title": "Message on Teams (AI Inventory Builder prompt & output issues)",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/51736492",
+      "content": "Hi Johannes,\nI hope all is well! I wanted to reach out for guidance regarding the AI Inventory Builder. During a recent session with a group of EAs, we ran into a few challenges while using the tool to input data from allowed files:\n\n- Unexpected Output: The generated drawing isn’t accurately reflecting the requested relationships — for example, when prompting for Parent and Child Business Capabilities, the visual output differs from what’s expected.\n- Prompt Clarity: There’s uncertainty around how to structure effective prompts, especially when the intended diagram isn’t highly complex. The EA tried several variations to understand what would produce the correct result.\n\nI’ve personally experienced similar difficulties in getting consistent or accurate results, so I wanted to confirm the best avenue for support and any available best practices. Here’s the workspace link showing the various prompts and outputs: DTEArchDelIventoryBuilder (accessible via support@leanix)\n\nAn example image is also attached.\n\nCould you please advise if this should be directed through your team or if there’s another point of contact for this type of inquiry? Thank you!",
+      "metadata": {
+        "createdAt": "2025-11-06T09:36:39.122607Z",
+        "updatedAt": "2025-11-11T14:24:08.817451Z",
+        "state": "processed",
+        "owner": {
+          "name": "Johannes Wilden",
+          "email": "johannes.wilden@leanix.net"
+        },
+        "companyId": "2143dbc9-d42d-4b8f-a438-73ba5ba54891"
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ib-005",
+          "summary": "In-app prompt templates and best-practice help for Inventory Builder",
+          "details": "Provide curated prompt templates, example inputs, and a 'best-practices' help panel inside the Inventory Builder UI to help users craft prompts that produce correct relationships and layouts.",
+          "impact": "Reduces user confusion and support requests, increases successful imports.",
+          "possible_solutions": [
+            "Add a 'Prompt gallery' with copyable examples (e.g., Parent/Child capability prompt).",
+            "Add a 'Preview' mode that shows interpreted elements and allows incremental fixes before finalizing import."
+          ]
+        },
+        {
+          "id": "FR-ib-006",
+          "summary": "Support channel + workspace dry-run share",
+          "details": "Allow users to share a read-only 'dry-run' preview link of the parsed result that support/product teams can inspect for triage.",
+          "impact": "Faster support, easier reproduction of unexpected outputs."
+        }
+      ]
+    },
+    {
+      "id": "888b32b4-0422-4e0f-8ea7-f23d402fadec",
+      "title": "Customer interview on AI agent hub",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/52674605",
+      "content": "Summary — 30‑minute meeting (Neil Cook, Homeserve; Michelle Niedernhuber, LeanIX) — 2026-01-06\n\nMain context\n- Neil used an exported app list + Copilot to enrich AI capability fields and re-imported it — produced useful visibility quickly.\n\nMain concerns / improvement requests\n- Too many AI attributes appear by default in views/reports → overwhelming. Request: default many fields to off and provide a more condensed set of attributes.\n- Need for usage/volume metrics to separate production/embedded agents from desktop tests and tinkering (number of users, data volume, IP counts). These metrics are the trigger to import/link items into inventory.\n- Better ownership and org data: owners’ names get stale; syncing organizational structure (e.g., from Entra/AD or HR systems) would help.\n\nActions and next steps mentioned\n- Neil: trim the AI attribute set (hide MCP stuff until data exists); turn off unnecessary view fields.\n- Michelle / LeanIX: follow up on default views/dropdowns, collect volumes/usage availability, explore organisational data integration and MCP discovery features, and continue conversations about Google/Gemini.",
+      "metadata": {
+        "createdAt": "2026-01-08T13:27:20.286397Z",
+        "updatedAt": "2026-01-27T06:52:26.433815Z",
+        "state": "processed",
+        "owner": {
+          "name": "Michelle Niedernhuber",
+          "email": "michelle.niedernhuber@leanix.net"
+        },
+        "companyId": "ad2e6f12-8a86-4698-8535-65c92a877747",
+        "features": [
+          {
+            "id": "d9d4e8d1-d1c7-4c36-afd7-db79542fe053",
+            "type": "component",
+            "importance": 2
+          }
+        ]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ib-007",
+          "summary": "First-class export/enrich/re-import workflow",
+          "details": "Provide an export template (CSV/Excel) with stable schema for Inventory/Agents, a guided 'enrich' workflow (column mapping UI), validation run, and robust import/merge options (create/update/skip) to support the common pattern of export → external enrichment (Copilot/Excel) → re-import.",
+          "impact": "Formalizes current customer workarounds, reduces errors during re-import and speeds agent governance onboarding.",
+          "possible_solutions": [
+            "Provide named export templates per fact sheet type with field descriptions and sample rows.",
+            "Build an import UI that supports mapping, transformation rules, and dry-run validation with clear error reports."
+          ]
+        },
+        {
+          "id": "FR-ib-008",
+          "summary": "Condensed default views and attribute toggles for AI/Agent fields",
+          "details": "Introduce a default 'compact' attribute set for AI/agent inventories and allow admins to toggle additional AI fields on demand.",
+          "impact": "Reduces UI clutter and improves adoption for non-expert users."
+        }
+      ]
+    },
+    {
+      "id": "3ca118f7-ed20-4be1-a5a0-da712e151711",
+      "title": "Extend table view to attributes on related Fact Sheet types (generic join report)",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/52517273",
+      "content": "a generic join report with columns over 2 factsheets is a missing feature in leanix. We now have to export and join in excel to be able to report in this way.",
+      "metadata": {
+        "createdAt": "2025-12-22T15:23:24.987776Z",
+        "updatedAt": "2026-01-26T14:08:18.044118Z",
+        "state": "processed",
+        "owner": {
+          "name": "Wim Frankena",
+          "email": "wim.frankena@leanix.net"
+        },
+        "companyId": "583a01d4-7ab0-4e7d-8e24-a24e759b0207",
+        "tags": ["reports","automated"],
+        "features": [
+          {
+            "id": "b265482e-ddcf-41aa-8c03-fe5cf78252a9",
+            "type": "feature",
+            "importance": 4
+          }
+        ]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ex-009",
+          "summary": "Join attributes from related fact sheets into Inventory table view",
+          "details": "Allow users to add columns from related fact sheets (one or multiple hops) into the Inventory table view, including subtype filtering and sorting — i.e., native 'join' functionality to avoid exporting to Excel for relational reporting.",
+          "impact": "Removes frequent Excel workaround, speeds reporting and reduces errors.",
+          "possible_solutions": [
+            "UI to select related fact sheet type, choose attributes and aggregation rules (e.g., first match, list, count).",
+            "Support nested relations (multi-level) and saveable views."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c8246600-b44e-4a0f-a72e-561368880690",
+      "title": "Extend table view to attributes on related Fact Sheet types — 'Currently, excel is the only option.'",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/53002464",
+      "content": "Yes please!\nCurrently, excel is the only option.",
+      "metadata": {
+        "createdAt": "2026-01-27T08:08:42.577923Z",
+        "updatedAt": "2026-01-27T08:08:42.577923Z",
+        "state": "unprocessed",
+        "owner": {
+          "name": "Wim Frankena",
+          "email": "wim.frankena@leanix.net"
+        },
+        "companyId": "64e08eba-3a88-4a72-9417-dcd58dc1953e",
+        "features": [
+          {
+            "id": "b265482e-ddcf-41aa-8c03-fe5cf78252a9",
+            "type": "feature",
+            "importance": 3
+          }
+        ]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ex-010",
+          "summary": "Replace Excel-only workflows with native multi-factsheet table views",
+          "details": "Provide a native capability to include attributes from related fact sheet types in inventory exports and on-screen tables so users don't need to export to Excel for joins or multi-table analyses.",
+          "impact": "Eliminates the 'Excel is the only option' pain, keeps workflows inside LeanIX, reduces manual processing and reconciliation.",
+          "possible_solutions": [
+            "Add 'Add column from related FS' control in table column selector with subtype filters.",
+            "Export options: CSV/Excel/JSON that reflect the joined view."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "46208b41-7116-4cbb-bb5e-f7307db09420",
+      "title": "Admin Option to save Inventory table view / extract regularly",
+      "source_url": "https://leanix.productboard.com/all-notes/notes/52182373",
+      "content": "Hi, I would like to be able to \"save\" a view in Inventory...\nI have made a lot of effort on creating a specific table showing columns I want, and then I also want to be able to take that extract regularly. Hence it would be beneficial to save that table view / table setup.",
+      "metadata": {
+        "createdAt": "2025-12-02T13:14:49.854674Z",
+        "updatedAt": "2025-12-16T12:47:16.274600Z",
+        "state": "processed",
+        "owner": {
+          "name": "Niklas Buellesbach",
+          "email": "niklas.buellesbach@leanix.net"
+        },
+        "companyId": "419b526c-90f4-4626-91ef-00dc6ff53533",
+        "features": [
+          {
+            "id": "b261bb2e-0d64-4c63-b6e1-90e355c35f59",
+            "type": "feature",
+            "importance": 3
+          }
+        ]
+      },
+      "feature_requests": [
+        {
+          "id": "FR-ex-011",
+          "summary": "Saved Inventory table views + scheduled exports",
+          "details": "Allow users to save table configurations (columns, filters, sort) as named 'Saved Views' and schedule recurring exports (CSV/Excel/JSON) to email / S3 / webhook. Also expose saved views via API for automation.",
+          "impact": "Reduces repeated manual setup and supports recurring reporting/integration workflows.",
+          "possible_solutions": [
+            "Add 'Save view' in Inventory UI with permissions and sharing options.",
+            "Add scheduling UI for periodic exports and destination configuration."
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
